@@ -196,6 +196,10 @@ router.put('/:id', auth, adminAuth, async (req, res) => {
       updateData.items = items;
     }
 
+    // Nếu admin xác nhận đơn hàng là hoàn thành/giao hàng, tự động chuyển paymentStatus sang 'Đã thanh toán'
+    if (status === 'Đã hoàn thành' || status === 'Đã giao hàng') {
+      updateData.paymentStatus = 'Đã thanh toán';
+    }
     // Nếu admin xác nhận đơn hàng, tự động chuyển sang 'Chờ nhận giao'
     if (status === 'Đã hoàn thành' || status === 'Đã xác nhận' || status === 'Đã gửi hàng') {
       updateData.status = 'Chờ nhận giao';
@@ -363,9 +367,8 @@ router.post('/shipper/delivered/:id', auth, shipperAuth, async (req, res) => {
     order.status = 'Đã giao hàng';
     order.deliveryStatus = 'delivered';
     order.deliveredAt = new Date();
-    if (order.paymentMethod === 'COD') {
-      order.paymentStatus = 'Đã thanh toán';
-    }
+    // Luôn chuyển paymentStatus sang 'Đã thanh toán' khi hoàn thành
+    order.paymentStatus = 'Đã thanh toán';
     await order.save();
     res.json({ message: 'Đã xác nhận giao hàng thành công', order });
   } catch (error) {

@@ -16,18 +16,29 @@ const App: React.FC = () => {
   useEffect(() => {
     const token = localStorage.getItem('shipper_token');
     const userData = localStorage.getItem('shipper_user');
-    
     if (token && userData) {
       try {
         setUser(JSON.parse(userData));
       } catch (error) {
         localStorage.removeItem('shipper_token');
         localStorage.removeItem('shipper_user');
+        setUser(null);
       }
+    } else {
+      setUser(null);
     }
     setLoading(false);
   }, []);
 
+  // Đăng xuất: xóa token và user, chuyển về /login
+  const handleLogout = () => {
+    localStorage.removeItem('shipper_token');
+    localStorage.removeItem('shipper_user');
+    setUser(null);
+    window.location.href = '/login';
+  };
+
+  // Đăng nhập thành công: lưu user vào state
   const handleLoginSuccess = (userData: any) => {
     setUser(userData);
   };
@@ -54,37 +65,37 @@ const App: React.FC = () => {
       <CssBaseline />
       <Router>
         <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-          {user && <NavBar user={user} />}
+          {user && <NavBar user={user} onLogout={handleLogout} />}
           <Container maxWidth="xl" sx={{ py: 3 }}>
             <Routes>
               <Route 
                 path="/login" 
                 element={
-                  user ? <Navigate to="/orders/available" /> : <Login onLoginSuccess={handleLoginSuccess} />
+                  user ? <Navigate to="/orders/available" replace /> : <Login onLoginSuccess={handleLoginSuccess} />
                 } 
               />
               <Route 
                 path="/orders/available" 
                 element={
-                  user ? <OrdersAvailable /> : <Navigate to="/login" />
+                  user ? <OrdersAvailable /> : <Navigate to="/login" replace />
                 } 
               />
               <Route 
                 path="/orders/assigned" 
                 element={
-                  user ? <OrdersAssigned /> : <Navigate to="/orders/available" />
+                  user ? <OrdersAssigned /> : <Navigate to="/login" replace />
                 } 
               />
               <Route 
                 path="/orders/delivered" 
                 element={
-                  user ? <OrdersDelivered /> : <Navigate to="/orders/available" />
+                  user ? <OrdersDelivered /> : <Navigate to="/login" replace />
                 } 
               />
               <Route 
                 path="*" 
                 element={
-                  user ? <Navigate to="/orders/available" /> : <Navigate to="/login" />
+                  user ? <Navigate to="/orders/available" replace /> : <Navigate to="/login" replace />
                 } 
               />
             </Routes>

@@ -27,9 +27,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 interface NavBarProps {
   user?: any;
+  onLogout?: () => void;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ user }) => {
+const NavBar: React.FC<NavBarProps> = ({ user, onLogout }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const location = useLocation();
@@ -45,9 +46,13 @@ const NavBar: React.FC<NavBarProps> = ({ user }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('shipper_token');
-    localStorage.removeItem('shipper_user');
-    navigate('/login');
+    if (onLogout) {
+      onLogout();
+    } else {
+      localStorage.removeItem('shipper_token');
+      localStorage.removeItem('shipper_user');
+      navigate('/login');
+    }
     handleClose();
   };
 

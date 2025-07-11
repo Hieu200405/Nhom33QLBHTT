@@ -43,7 +43,6 @@ const Register: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
-  const [fakeOtp, setFakeOtp] = useState('');
 
   const validateStep = () => {
     switch (activeStep) {
@@ -276,13 +275,6 @@ const Register: React.FC = () => {
             <Typography paragraph>
               Chúng tôi đã gửi mã xác thực đến email: {email}
             </Typography>
-            
-            {/* Hiển thị OTP giả cho test */}
-            <Alert severity="info" sx={{ mb: 2 }}>
-              <Typography variant="body2">
-                <strong>🔐 OTP giả (chỉ để test):</strong> {fakeOtp}
-              </Typography>
-            </Alert>
             
             <TextField
               fullWidth
