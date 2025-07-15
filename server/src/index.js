@@ -79,7 +79,11 @@ app.use('/assets/challenges', express.static(path.join(__dirname, 'assets/challe
 app.use('/assets/events', express.static(path.join(__dirname, 'assets/events')));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`CORS enabled for: ${corsOptions.origin.join(', ')}`);
-}); 
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`CORS enabled for: ${corsOptions.origin.join(', ')}`);
+  });
+}
+
+module.exports = app; 
